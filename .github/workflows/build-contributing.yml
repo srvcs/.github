@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: deploy-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -47,4 +47,10 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'chore(contributing): redeploy generated artifact to production'
-          git push origin HEAD:${{ github.ref_name }}
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:${{ github.ref_name }}; then exit 0; fi
+            echo "Push rejected; rebasing on concurrent deploys and retrying (attempt $attempt)."
+            git pull --rebase origin ${{ github.ref_name }}
+          done
+          echo "Failed to deploy artifact after multiple attempts." >&2
+          exit 1
