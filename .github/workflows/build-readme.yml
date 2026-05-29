@@ -44,7 +44,7 @@ jobs:
           # and drift from an edited section.
           git add -f profile/README.md
           if git diff --cached --quiet; then
-            echo "No drift detected. README artifact already in production. 🛰️"
+            echo "No drift detected. README artifact already up to date"
             exit 0
           fi
           git config user.name 'github-actions[bot]'

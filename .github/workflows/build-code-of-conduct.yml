@@ -41,7 +41,7 @@ jobs:
           set -euo pipefail
           git add -f .github/CODE_OF_CONDUCT.md
           if git diff --cached --quiet; then
-            echo "No drift detected. CODE_OF_CONDUCT artifact already in production. 🛰️"
+            echo "No drift detected. CODE_OF_CONDUCT artifact already up to date"
             exit 0
           fi
           git config user.name 'github-actions[bot]'

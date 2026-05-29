@@ -41,7 +41,7 @@ jobs:
           set -euo pipefail
           git add -f .github/PULL_REQUEST_TEMPLATE.md
           if git diff --cached --quiet; then
-            echo "No drift detected. PULL_REQUEST_TEMPLATE artifact already in production. 🛰️"
+            echo "No drift detected. PULL_REQUEST_TEMPLATE artifact already up to date"
             exit 0
           fi
           git config user.name 'github-actions[bot]'
