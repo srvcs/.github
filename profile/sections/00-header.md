@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/srvcs-nobg.png" alt="srvcs.cloud" width="200" />
+<a href="https://srvcs.cloud"><img src="assets/srvcs-nobg.png" alt="srvcs.cloud" width="200" /></a>
 
-# ☁️ srvcs.cloud ☁️
+# ☁️ [srvcs.cloud](https://srvcs.cloud) ☁️
 
 ### **Building focused, composable services for modern distributed systems.**
 
