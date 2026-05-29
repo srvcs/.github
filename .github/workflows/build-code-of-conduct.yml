@@ -1,0 +1,50 @@
+name: Build & Deploy CODE_OF_CONDUCT
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/code-of-conduct/sections/**'
+      - '.github/workflows/build-code-of-conduct.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Assemble CODE_OF_CONDUCT from independently deployable sections
+        run: |
+          set -euo pipefail
+          out=.github/CODE_OF_CONDUCT.md
+          banner='<!-- GENERATED ARTIFACT — do not hand-edit. Source of truth: services/code-of-conduct/sections/*.md. Redeployed by .github/workflows/build-code-of-conduct.yml -->'
+          tmp="$(mktemp)"
+          printf '%s\n\n' "$banner" > "$tmp"
+          first=1
+          for f in services/code-of-conduct/sections/*.md; do
+            if [ "$first" -eq 0 ]; then printf '\n---\n\n' >> "$tmp"; fi
+            cat "$f" >> "$tmp"
+            first=0
+          done
+          mv "$tmp" "$out"
+
+      - name: Redeploy artifact if it drifted from source
+        run: |
+          set -euo pipefail
+          git add -f .github/CODE_OF_CONDUCT.md
+          if git diff --cached --quiet; then
+            echo "No drift detected. CODE_OF_CONDUCT artifact already in production. 🛰️"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(code-of-conduct): redeploy generated artifact to production'
+          git push origin HEAD:${{ github.ref_name }}
