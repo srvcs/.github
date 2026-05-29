@@ -1,0 +1,4 @@
+# profile/README.md is a generated build artifact, assembled from
+# profile/sections/*.md by .github/workflows/build-readme.yml.
+# CI force-adds and commits it; it is never hand-committed.
+profile/README.md

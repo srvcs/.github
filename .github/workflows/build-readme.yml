@@ -1,0 +1,53 @@
+name: Build & Deploy README
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'profile/sections/**'
+      - '.github/workflows/build-readme.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-readme
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble README from independently deployable sections
+        run: |
+          set -euo pipefail
+          out=profile/README.md
+          banner='<!-- GENERATED ARTIFACT — do not hand-edit. Source of truth: profile/sections/*.md. Redeployed by .github/workflows/build-readme.yml -->'
+          tmp="$(mktemp)"
+          printf '%s\n\n' "$banner" > "$tmp"
+          first=1
+          for f in profile/sections/*.md; do
+            if [ "$first" -eq 0 ]; then printf '\n---\n\n' >> "$tmp"; fi
+            cat "$f" >> "$tmp"
+            first=0
+          done
+          mv "$tmp" "$out"
+
+      - name: Redeploy artifact if it drifted from source
+        run: |
+          set -euo pipefail
+          # README.md is a build artifact (gitignored), so force-stage it and
+          # diff against HEAD — this catches both a brand-new file (first run)
+          # and drift from an edited section.
+          git add -f profile/README.md
+          if git diff --cached --quiet; then
+            echo "No drift detected. README artifact already in production. 🛰️"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(readme): redeploy generated artifact to production'
+          git push origin HEAD:${{ github.ref_name }}
