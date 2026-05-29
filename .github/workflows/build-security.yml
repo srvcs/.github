@@ -1,0 +1,50 @@
+name: Build & Deploy SECURITY
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'services/security/sections/**'
+      - '.github/workflows/build-security.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Assemble SECURITY from independently deployable sections
+        run: |
+          set -euo pipefail
+          out=.github/SECURITY.md
+          banner='<!-- GENERATED ARTIFACT — do not hand-edit. Source of truth: services/security/sections/*.md. Redeployed by .github/workflows/build-security.yml -->'
+          tmp="$(mktemp)"
+          printf '%s\n\n' "$banner" > "$tmp"
+          first=1
+          for f in services/security/sections/*.md; do
+            if [ "$first" -eq 0 ]; then printf '\n---\n\n' >> "$tmp"; fi
+            cat "$f" >> "$tmp"
+            first=0
+          done
+          mv "$tmp" "$out"
+
+      - name: Redeploy artifact if it drifted from source
+        run: |
+          set -euo pipefail
+          git add -f .github/SECURITY.md
+          if git diff --cached --quiet; then
+            echo "No drift detected. SECURITY artifact already in production. 🛰️"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(security): redeploy generated artifact to production'
+          git push origin HEAD:${{ github.ref_name }}
