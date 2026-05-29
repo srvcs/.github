@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/srvcs-nobg.png" alt="srvcs.cloud" />
+<img src="assets/srvcs-nobg.png" alt="srvcs.cloud" width="200" />
 
 # ☁️ srvcs.cloud ☁️
 
