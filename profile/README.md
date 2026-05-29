@@ -18,7 +18,7 @@ _One concern. One service. One deployment pipeline._
 ![Vibes](https://img.shields.io/badge/vibes-immaculate-ff69b4?style=for-the-badge)
 
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nix Flakes](https://img.shields.io/badge/Nix_Flakes-5277C3?style=for-the-badge&logo=nixos&logoColor=white)
 ![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
 ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white)
 ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
@@ -58,7 +58,7 @@ graph TD
 | Capability | Description | Necessary? |
 |------------|-------------|:----------:|
 | 🎯 **Single-purpose APIs** | Narrowly scoped operational primitives | ❓ |
-| 📦 **Cloud-native delivery** | Containers, automation, and unnecessary confidence | ✅ |
+| 📦 **Flake-native delivery** | Nix flakes, automation, and unnecessary confidence | ✅ |
 | 👁️ **Observable-by-default** | Logs, metrics, traces, health checks, and existential dread | ✅ |
 | 🛰️ **Independent deployability** | For workloads that previously fit inside a function | ❌ |
 | 🏢 **Enterprise readiness** | For tasks that should not require enterprise readiness | 🤷 |
@@ -69,7 +69,7 @@ graph TD
 
 <div align="center">
 
-| ✅ OpenAPI Docs | ✅ Containerized Runtime | ✅ Health Endpoints |
+| ✅ OpenAPI Docs | ✅ Flake-backed Runtime | ✅ Health Endpoints |
 |:---:|:---:|:---:|
 | **✅ Structured Logging** | **✅ Metrics Support** | **✅ CI/CD Workflows** |
 | **✅ Deployment Manifests**  | **✅ Imposter Syndrome** | **✅ Technical Debt** |
