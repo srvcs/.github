@@ -1,0 +1,59 @@
+name: Build & Deploy Root README
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'readme/sections/**'
+      - '.github/workflows/build-root-readme.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Assemble README from independently deployable sections
+        run: |
+          set -euo pipefail
+          out=README.md
+          banner='<!-- GENERATED ARTIFACT — do not hand-edit. Source of truth: readme/sections/*.md. Redeployed by .github/workflows/build-root-readme.yml -->'
+          tmp="$(mktemp)"
+          printf '%s\n\n' "$banner" > "$tmp"
+          first=1
+          for f in readme/sections/*.md; do
+            if [ "$first" -eq 0 ]; then printf '\n---\n\n' >> "$tmp"; fi
+            cat "$f" >> "$tmp"
+            first=0
+          done
+          mv "$tmp" "$out"
+
+      - name: Redeploy artifact if it drifted from source
+        run: |
+          set -euo pipefail
+          # README.md is a build artifact (gitignored), so force-stage it and
+          # diff against HEAD — this catches both a brand-new file (first run)
+          # and drift from an edited section.
+          git add -f README.md
+          if git diff --cached --quiet; then
+            echo "No drift detected. README artifact already up to date"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore(root-readme): redeploy generated artifact to production'
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:${{ github.ref_name }}; then exit 0; fi
+            echo "Push rejected; rebasing on concurrent deploys and retrying (attempt $attempt)."
+            git pull --rebase origin ${{ github.ref_name }}
+          done
+          echo "Failed to deploy artifact after multiple attempts." >&2
+          exit 1
