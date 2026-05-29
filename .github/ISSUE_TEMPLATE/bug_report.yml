@@ -1,0 +1,46 @@
+name: 🐛 Bug Report
+description: Report unexpected behavior in a production-ready microservice.
+title: "[bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for filing a report. Every report is traced and triaged.
+  - type: input
+    id: service
+    attributes:
+      label: Affected Service
+      description: Which independently deployable service is misbehaving?
+      placeholder: e.g. the name of the affected service
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to Reproduce
+      description: How do we observe this in our region?
+    validations:
+      required: true
+  - type: checkboxes
+    id: observability
+    attributes:
+      label: Observability
+      options:
+        - label: I have checked the logs
+        - label: I have checked the metrics
+        - label: I have checked the traces

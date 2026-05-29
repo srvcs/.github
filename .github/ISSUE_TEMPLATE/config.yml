@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🌐 srvcs.cloud
+    url: https://srvcs.cloud
+    about: Our website and documentation.
+  - name: 📍 Status Page (us-east-1)
+    url: https://srvcs.cloud
+    about: Operational status for the us-east-1 region.
+  - name: 🏛️ Architecture Review Board
+    url: https://srvcs.cloud
+    about: To propose promoting a function to a service, open a Service Proposal issue.

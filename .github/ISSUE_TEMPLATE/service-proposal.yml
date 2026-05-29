@@ -1,0 +1,42 @@
+name: 🧩 Service Proposal
+description: Propose decomposing a function into a new, independently deployable microservice.
+title: "[rfc]: "
+labels: ["rfc", "architecture-review-board"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before a function may earn a runtime boundary, the Architecture Review Board must review this proposal.
+  - type: input
+    id: function
+    attributes:
+      label: The Function
+      description: Describe, in a single sentence, the function you wish to promote to a service.
+    validations:
+      required: true
+  - type: textarea
+    id: justification
+    attributes:
+      label: Justification
+      description: Why does this function warrant its own deployment pipeline and service-level agreement?
+    validations:
+      required: true
+  - type: checkboxes
+    id: eligibility
+    attributes:
+      label: Eligibility Criteria
+      description: A function is eligible only if all criteria are met.
+      options:
+        - label: It represents a single, well-bounded concern
+        - label: It can be described in a single sentence
+        - label: It can be deployed and scaled independently of its callers
+  - type: dropdown
+    id: mesh
+    attributes:
+      label: Will this require a service mesh?
+      options:
+        - "Yes"
+        - "No"
+        - "Under evaluation"
+    validations:
+      required: true

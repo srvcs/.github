@@ -1,0 +1,44 @@
+name: 📉 Incident Retrospective
+description: File a blameless retrospective for a production incident.
+title: "[retro]: "
+labels: ["incident", "retrospective"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        All incidents, regardless of severity, conclude with a retrospective.
+  - type: input
+    id: summary
+    attributes:
+      label: Incident Summary
+      description: One sentence. What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Timeline
+      description: A chronological account, in us-east-1 local time.
+    validations:
+      required: true
+  - type: textarea
+    id: rootcause
+    attributes:
+      label: Root Cause
+      description: Describe the underlying cause.
+    validations:
+      required: true
+  - type: textarea
+    id: actionitems
+    attributes:
+      label: Action Items
+      description: What will we add? (Retries, tracing, another service, etc.)
+    validations:
+      required: true
+  - type: checkboxes
+    id: closure
+    attributes:
+      label: Closure
+      options:
+        - label: This retrospective was blameless
+        - label: Follow-up action items have been filed
