@@ -2,3 +2,5 @@
 # profile/sections/*.md by .github/workflows/build-readme.yml.
 # CI force-adds and commits it; it is never hand-committed.
 profile/README.md
+# Generated community-health artifacts (assembled from services/*/sections/*.md).
+.github/CONTRIBUTING.md
